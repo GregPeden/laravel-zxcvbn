@@ -1,5 +1,5 @@
 {
-    "name": "olssonm/laravel-zxcvbn",
+    "name": "olssonm/l5-zxcvbn",
     "description": "Implementation of the zxcvbn project by @dropbox for Laravel. Uses zxcvbn-php by @bjeavons.",
     "keywords": [
         "olssonm",
