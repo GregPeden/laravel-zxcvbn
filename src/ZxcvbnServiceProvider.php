@@ -19,13 +19,12 @@ class ZxcvbnServiceProvider extends ServiceProvider
          * Extend the Laravel Validator with the "zxcvbn_min" rule
          */
         Validator::extend('zxcvbn_min', function($attribute, $value, $parameters) {
-            $zxcvbn = new ZxcvbnPhp();
-            $zxcvbn = $zxcvbn->passwordStrength($value);
-            $target = 5;
+            $target = $parameters[0] ?? 5;
+            $username = $parameters[1] ?? null;
+            $email = $parameters[2] ?? null;
 
-            if (isset($parameters[0])) {
-                $target = $parameters[0];
-            }
+            $zxcvbn = new ZxcvbnPhp();
+            $zxcvbn = $zxcvbn->passwordStrength($value, [$username, $email]);
 
             return ($zxcvbn['score'] >= $target);
         }, 'Your :attribute is not secure enough.');

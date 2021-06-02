@@ -76,6 +76,16 @@ class ZxcvbnTest extends \Orchestra\Testbench\TestCase {
 		$this->assertEquals(false, $this->validate_without_message_min('staple horse battery', 5));
 	}
 
+    /** @test */
+	public function test_user_property_matching()
+    {
+        // Test username/email matching
+        $this->assertEquals(true, $this->validate_without_message_min('myname iscryptic', 4));
+        $this->assertEquals(false, $this->validate_without_message_min('myname iscryptic', 4, 'myname iscryptic', 'typicalemail@sillycorp.com'));
+        $this->assertEquals(true, $this->validate_without_message_min('notveryclever@gmail.com', 4));
+        $this->assertEquals(false, $this->validate_without_message_min('notveryclever@gmail.com', 4, 'bob bigwig', 'notveryclever@sillycorp.com'));
+    }
+
 	/** @test */
 	public function test_password_strength_with_message()
 	{
@@ -109,22 +119,22 @@ class ZxcvbnTest extends \Orchestra\Testbench\TestCase {
 	}
 
 	/** @note validation helper */
-	private function validate_without_message_min($password, $min)
+	private function validate_without_message_min($password, $min, $email = null, $username = null)
 	{
 		$data = ['password' => $password];
         $validator = Validator::make($data, [
-            'password' => 'zxcvbn_min:' . $min . '|required',
+            'password' => 'zxcvbn_min:' . $min . $username ? ",$username" : ',' . $email ? ",$email" : ',' . '|required',
         ]);
 
         return $validator->passes();
 	}
 
 	/** @note validation helper */
-	private function validate_with_message_min($password, $min, $message)
+	private function validate_with_message_min($password, $min, $message, $email = null, $username = null)
 	{
 		$data = ['password' => $password];
         $validator = Validator::make($data, [
-            'password' => 'zxcvbn_min:' . $min . '|required',
+            'password' => 'zxcvbn_min:' . $min . $username ? ",$username" : ',' . $email ? ",$email" : ',' . '|required',
         ], [
 			'password.zxcvbn_min' => $message
 		]);
